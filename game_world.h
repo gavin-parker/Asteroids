@@ -1,14 +1,14 @@
 #pragma once
 #include "ship.h"
 
-class GameWorld {
+class GameWorld : public GameObject {
 public:
     explicit GameWorld(Controller& controller);
-    void Update(float frameDelta);
-    void Draw();
+    void Update(float frameDelta) override;
+    void Draw() override;
 private:
     Controller& mController;
-    Ship mShip;
+    std::unique_ptr<Ship> mShip;
 };
 
 

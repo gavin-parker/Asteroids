@@ -5,6 +5,7 @@
 #include <functional>
 #include <deque>
 #include <chrono>
+#include <algorithm>
 
 class GameObject {
 

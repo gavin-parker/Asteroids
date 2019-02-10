@@ -1,4 +1,6 @@
 #include "ship.h"
+#include "utils.h"
+
 #define PI 3.14159265
 using namespace std::chrono_literals;
 
@@ -8,6 +10,7 @@ Ship::Ship(const glm::vec2& center, const glm::vec2& heading, Controller& contro
         mController(controller){
 
 }
+
 
 void Ship::Update(float frameDelta)
 {
@@ -20,6 +23,12 @@ void Ship::Update(float frameDelta)
     if(mController.held('e') and ReadyToFire())
         Fire();
     mPosition += mSpeed;
+    auto bounds = ci::app::getWindowBounds();
+    if(!bounds.contains(mPosition))
+    {
+        ReturnToPlayArea(bounds, mPosition);
+    }
+
     GameObject::Update(frameDelta);
 }
 
@@ -27,7 +36,7 @@ void Ship::Draw()
 {
 
     const auto front = mHeading*mSize;
-    const auto left = glm::vec2(mHeading.y*(mSize/2.0), -mHeading.x*(mSize/2.0));
+    const auto left = glm::vec2(mHeading.y*(mSize/3.0), -mHeading.x*(mSize/3.0));
     ci::gl::drawSolidTriangle(mPosition + front, mPosition + left, mPosition - left);
     GameObject::Draw();
 }
@@ -49,7 +58,7 @@ void Ship::Rotate(float degreesClockwise)
 void Ship::Fire()
 {
     auto laser = CreateGameObject<Laser>(normalize(mHeading), mPosition);
-    RegisterCallback([this, laser](){DestroyGameObject(laser);}, std::chrono::steady_clock::now() + 1s);
+    RegisterCallback([this, laser](){DestroyGameObject(laser);}, std::chrono::steady_clock::now() + 5s);
     mLastFireTime = std::chrono::steady_clock::now();
 }
 

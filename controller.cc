@@ -3,6 +3,7 @@
 //
 
 #include "controller.h"
+using namespace ci::app;
 
 Controller::Controller(std::initializer_list<char> bindings)
 {

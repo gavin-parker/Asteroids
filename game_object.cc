@@ -12,7 +12,8 @@ void GameObject::Update(float frameDelta)
     std::for_each(mChildren.begin(), mChildren.end(), [frameDelta](auto child){child->Update(frameDelta);});
 }
 
-bool GameObject::Call(Callback &callback) {
+bool GameObject::Call(Callback &callback)
+{
     auto now = std::chrono::steady_clock::now();
     if(now > std::get<1>(callback))
     {

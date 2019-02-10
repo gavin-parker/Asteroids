@@ -3,14 +3,14 @@
 
 GameWorld::GameWorld(Controller &controller) :
         mController(controller),
-        mShip(getWindowCenter(), glm::vec2{0.0, 1.0}, mController){}
+        mShip(CreateGameObject<Ship>(ci::app::getWindowCenter(), glm::vec2{0.0, 1.0}, mController).get()){}
 
 void GameWorld::Update(const float frameDelta)
 {
-    mShip.Update(frameDelta);
+    GameObject::Update(frameDelta);
 }
 
 void GameWorld::Draw()
 {
-    mShip.Draw();
+    GameObject::Draw();
 }
