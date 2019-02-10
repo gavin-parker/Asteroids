@@ -13,14 +13,12 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
 endif()
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${cxx_compile_options}")
 
-set(SOURCES
-        application.h
-        application.cc
-        ship.h
-        ship.cc
-        controller.h
-        controller.cc
+file(GLOB asteroids
+        "*.h"
+        "*.cc"
         )
+
+set(SOURCES ${asteroids})
 
 ci_make_app(
         APP_NAME    "homework"
