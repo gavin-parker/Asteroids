@@ -1,18 +1,17 @@
 #pragma once
 
 #include <glm/vec2.hpp>
-#include "game_object.h"
+#include "collidable.h"
 
-class Asteroid : public GameObject {
+class Asteroid : public Collidable {
 public:
-    Asteroid(glm::vec2 direction, glm::vec2 position, float size);
+    Asteroid(GameObject& parent, glm::vec2 direction, glm::vec2 position, float size, float speed);
 
     void Update(float frameDelta) override;
     void Draw() override;
+    void Collide(Collidable& other) override;
 private:
     glm::vec2 mDirection;
-    glm::vec2 mPosition;
-    float mSize;
     float mSpeed;
 };
 

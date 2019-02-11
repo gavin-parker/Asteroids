@@ -2,21 +2,21 @@
 #include <cinder/app/RendererGl.h>
 #include <cinder/gl/gl.h>
 #include "controller.h"
-#include "game_object.h"
 #include "laser.h"
+#include "collidable.h"
 
-class Ship : public GameObject {
+
+class Ship : public Collidable {
 public:
-    Ship(const glm::vec2 &center, const glm::vec2& heading, Controller& controller);
+    Ship(GameObject& parent, const glm::vec2 &center, const glm::vec2& heading, Controller& controller);
     void Update(float frameDelta);
     void Draw();
     void Accelerate(float force);
     void Rotate(float degreesClockwise);
     void Fire();
+    void Collide(Collidable& other) override;
 private:
-    glm::vec2 mPosition;
     glm::vec2 mHeading;
-    const float mSize = 10;
     Controller& mController;
     glm::vec2 mSpeed{0,0};
     std::vector<std::shared_ptr<Laser>> mLasers;

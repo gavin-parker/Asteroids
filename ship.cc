@@ -4,8 +4,7 @@
 #define PI 3.14159265
 using namespace std::chrono_literals;
 
-Ship::Ship(const glm::vec2& center, const glm::vec2& heading, Controller& controller) :
-        mPosition(center),
+Ship::Ship(GameObject& parent, const glm::vec2& center, const glm::vec2& heading, Controller& controller) : Collidable(parent, center, 10),
         mHeading(heading),
         mController(controller){
 
@@ -65,4 +64,8 @@ void Ship::Fire()
 bool Ship::ReadyToFire()
 {
     return std::chrono::steady_clock::now() - mLastFireTime > 200ms;
+}
+
+void Ship::Collide(Collidable &other) {
+
 }
