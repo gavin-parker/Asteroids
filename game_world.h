@@ -1,5 +1,8 @@
 #pragma once
-#include "ship.h"
+
+#include "game_object.h"
+#include "controller.h"
+#include "collidable.h"
 
 class GameWorld : public GameObject {
 public:

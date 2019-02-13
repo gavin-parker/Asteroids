@@ -21,7 +21,7 @@ file(GLOB asteroids
 set(SOURCES ${asteroids})
 
 ci_make_app(
-        APP_NAME    "homework"
+        APP_NAME    "asteroids"
         SOURCES     ${SOURCES}
         INCLUDES    ${CMAKE_CURRENT_SOURCE_DIR}
         CINDER_PATH ${CINDER_PATH}

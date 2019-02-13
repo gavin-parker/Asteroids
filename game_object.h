@@ -57,9 +57,9 @@ protected:
         mChildren.erase(std::remove_if(mChildren.begin(), mChildren.end(), [ptr](auto c){return c == ptr;}),mChildren.end());
     }
 
-    void RegisterCallback(std::function<void()> f, std::chrono::steady_clock::time_point time)
+    void RegisterCallback(std::function<void()> f, std::chrono::microseconds time)
     {
-        mCallbacks.emplace_back(f, time);
+        mCallbacks.emplace_back(f, std::chrono::steady_clock::now() + time);
     }
 
     virtual void Destroy()

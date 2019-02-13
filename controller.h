@@ -3,7 +3,6 @@
 #include <unordered_map>
 class Controller {
 public:
-    Controller(std::initializer_list<char> bindings);
     void keyUp(ci::app::KeyEvent &event);
     void keyDown(ci::app::KeyEvent &event);
     bool held(char key) const;

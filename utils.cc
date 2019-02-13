@@ -1,12 +1,8 @@
-//
-// Created by gavinparker on 10-2-19.
-//
-
-
 #include <cinder/Area.h>
 #include <glm/vec2.hpp>
 
-void ReturnToPlayArea(cinder::Area &bounds, glm::vec2 &pos){
+void ReturnToPlayArea(cinder::Area &bounds, glm::vec2 &pos)
+{
     if(pos.x > bounds.x2)
         pos.x = bounds.x1 + (pos.x - bounds.x2);
     if(pos.x < bounds.x1)

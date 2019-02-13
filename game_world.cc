@@ -1,15 +1,17 @@
 #include "game_world.h"
 #include "asteroid.h"
+#include "ship.h"
 #include <glm/gtc/random.hpp>
+
+using namespace std::chrono_literals;
 
 GameWorld::GameWorld(Controller &controller) :
         GameObject(),
         mController(controller){
     CreateGameObject<Ship>(ci::app::getWindowCenter(), glm::vec2{0.0, 1.0}, mController);
-
     RegisterCallback([this](){
         SpawnAsteroid();
-    }, std::chrono::steady_clock::now() + std::chrono::seconds(5));
+    }, 5s);
 }
 
 void GameWorld::Update(const float frameDelta)
@@ -29,7 +31,7 @@ void GameWorld::SpawnAsteroid()
     CreateGameObject<Asteroid>(glm::vec2{1.0, 1.0}, glm::normalize(direction), 20, 30);
     RegisterCallback([this](){
         SpawnAsteroid();
-    }, std::chrono::steady_clock::now() + std::chrono::seconds(10));
+    }, 10s);
 }
 
 void GameWorld::AddCollider(Collidable* collidable)

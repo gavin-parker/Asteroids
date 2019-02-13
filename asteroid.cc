@@ -8,7 +8,6 @@ Asteroid::Asteroid(GameObject& parent, glm::vec2 direction, glm::vec2 position, 
                 Collidable(parent, Tag::Asteroid, position, size),
                 mDirection(direction),
                 mSpeed(speed) {
-
 }
 
 void Asteroid::Update(float frameDelta)

@@ -18,7 +18,7 @@ private:
     GameWorld mGameWorld;
     float mLastFrameTime;
     float mThisFrameTime;
-    Controller mController{'w', 'a', 's', 'd', 'e'};
+    Controller mController;
 };
 
 
