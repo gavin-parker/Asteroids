@@ -9,6 +9,7 @@
 void GameObject::Update(float frameDelta)
 {
     mCallbacks.erase(std::remove_if(mCallbacks.begin(), mCallbacks.end(), [this](auto &callback){return Call(callback);}), mCallbacks.end());
+    mChildren.erase(std::remove_if(mChildren.begin(), mChildren.end(), [](auto &child){return child->GetDestroyed();}), mChildren.end());
     std::for_each(mChildren.begin(), mChildren.end(), [frameDelta](auto child){child->Update(frameDelta);});
 }
 

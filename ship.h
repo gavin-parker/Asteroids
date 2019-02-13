@@ -15,6 +15,7 @@ public:
     void Rotate(float degreesClockwise);
     void Fire();
     void Collide(Collidable& other) override;
+
 private:
     glm::vec2 mHeading;
     Controller& mController;
@@ -23,6 +24,7 @@ private:
 
     std::chrono::steady_clock::time_point mLastFireTime = std::chrono::steady_clock::now();
     bool ReadyToFire();
+    void Crash();
 };
 
 

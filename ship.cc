@@ -1,10 +1,12 @@
 #include "ship.h"
 #include "utils.h"
+#include "asteroid.h"
+#include <glm/gtc/random.hpp>
 
 #define PI 3.14159265
 using namespace std::chrono_literals;
 
-Ship::Ship(GameObject& parent, const glm::vec2& center, const glm::vec2& heading, Controller& controller) : Collidable(parent, center, 10),
+Ship::Ship(GameObject& parent, const glm::vec2& center, const glm::vec2& heading, Controller& controller) : Collidable(parent, Tag::Player, center, 10),
         mHeading(heading),
         mController(controller){
 
@@ -23,10 +25,9 @@ void Ship::Update(float frameDelta)
         Fire();
     mPosition += mSpeed;
     auto bounds = ci::app::getWindowBounds();
+
     if(!bounds.contains(mPosition))
-    {
         ReturnToPlayArea(bounds, mPosition);
-    }
 
     GameObject::Update(frameDelta);
 }
@@ -57,7 +58,7 @@ void Ship::Rotate(float degreesClockwise)
 void Ship::Fire()
 {
     auto laser = CreateGameObject<Laser>(normalize(mHeading), mPosition);
-    RegisterCallback([this, laser](){DestroyGameObject(laser);}, std::chrono::steady_clock::now() + 5s);
+    RegisterCallback([this, laser](){DestroyGameObject(laser);}, std::chrono::steady_clock::now() + 2s);
     mLastFireTime = std::chrono::steady_clock::now();
 }
 
@@ -66,6 +67,19 @@ bool Ship::ReadyToFire()
     return std::chrono::steady_clock::now() - mLastFireTime > 200ms;
 }
 
-void Ship::Collide(Collidable &other) {
+void Ship::Collide(Collidable &other)
+{
+    if(other.GetTag() == Tag::Asteroid)
+        Crash();
+}
 
+void Ship::Crash()
+{
+    for(int i=0; i < 5; i ++)
+    {
+        auto direction = glm::sphericalRand(1.0);
+        auto laser = CreateFreeGameObject<Laser>(direction, mPosition);
+    }
+    std::cout << "you crashed!" << std::endl;
+    RegisterCallback([this](){Destroy();}, std::chrono::steady_clock::now() + 20ms);
 }

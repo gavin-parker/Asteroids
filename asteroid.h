@@ -10,6 +10,7 @@ public:
     void Update(float frameDelta) override;
     void Draw() override;
     void Collide(Collidable& other) override;
+    void Break();
 private:
     glm::vec2 mDirection;
     float mSpeed;

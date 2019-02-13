@@ -8,9 +8,10 @@ public:
     void Draw() override;
 
     void AddCollider(Collidable* collidable);
+    void RemoveCollider(Collidable* collidable);
+
 private:
     Controller& mController;
-    std::unique_ptr<Ship> mShip;
     std::vector<Collidable*> mColliders;
     void SpawnAsteroid();
     void UpdateCollisions();

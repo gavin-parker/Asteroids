@@ -7,24 +7,30 @@
 #include <chrono>
 #include <algorithm>
 #include <glm/vec2.hpp>
+#include "utils.h"
 
 class GameObject {
 
 public:
-    GameObject(GameObject& parent, glm::vec2 position, float size) : mParent(parent), mPosition(position), mSize(size){};
-    explicit GameObject() : mParent(*this), mPosition(0,0), mSize(0){};
-    explicit GameObject(bool isRoot) : mRoot(isRoot), mParent(*this), mPosition(0,0), mSize(0){};
+    GameObject(GameObject& parent, Tag tag, glm::vec2 position, float size) : mRoot(parent.GetRoot()), mParent(parent), mTag(tag), mPosition(position), mSize(size){};
+    GameObject() : mRoot(*this), mParent(*this), mTag(Tag::None), mPosition(0,0), mSize(0) {};
     virtual void Update(float frameDelta);
     virtual void Draw();
 
-    bool IsRoot() { return mRoot;}
     GameObject& GetParent() { return mParent;}
+    GameObject& GetRoot() { return mRoot;}
+
+    Tag GetTag() { return mTag;}
+    bool GetDestroyed() { return mDestroyed;}
+
 protected:
-    bool mRoot = false;
+    GameObject& mRoot;
+    bool mDestroyed = false;
     GameObject& mParent;
+    Tag mTag;
     glm::vec2 mPosition;
     float mSize;
-    //Use circular hitboxes for now
+
 
 
     void Create(const std::shared_ptr<GameObject> &object)
@@ -35,9 +41,15 @@ protected:
     template<typename T, typename ...Args>
     std::shared_ptr<T> CreateGameObject(Args&&... args)
     {
-        auto newObject = std::make_shared<T>(mParent, args...);
+        auto newObject = std::make_shared<T>(*this, args...);
         mChildren.push_back(newObject);
         return newObject;
+    }
+
+    template<typename T, typename ...Args>
+    std::shared_ptr<T> CreateFreeGameObject(Args&&... args)
+    {
+        return mRoot.CreateGameObject<T>(args...);
     }
 
     void DestroyGameObject(std::shared_ptr<GameObject> ptr)
@@ -48,6 +60,11 @@ protected:
     void RegisterCallback(std::function<void()> f, std::chrono::steady_clock::time_point time)
     {
         mCallbacks.emplace_back(f, time);
+    }
+
+    virtual void Destroy()
+    {
+        mDestroyed = true;
     }
 
 private:

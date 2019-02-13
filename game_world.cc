@@ -1,11 +1,12 @@
 #include "game_world.h"
 #include "asteroid.h"
-#include "cinder/Rand.h"
+#include <glm/gtc/random.hpp>
 
 GameWorld::GameWorld(Controller &controller) :
-        GameObject(true),
-        mController(controller),
-        mShip(CreateGameObject<Ship>(ci::app::getWindowCenter(), glm::vec2{0.0, 1.0}, mController).get()){
+        GameObject(),
+        mController(controller){
+    CreateGameObject<Ship>(ci::app::getWindowCenter(), glm::vec2{0.0, 1.0}, mController);
+
     RegisterCallback([this](){
         SpawnAsteroid();
     }, std::chrono::steady_clock::now() + std::chrono::seconds(5));
@@ -13,8 +14,8 @@ GameWorld::GameWorld(Controller &controller) :
 
 void GameWorld::Update(const float frameDelta)
 {
-    GameObject::Update(frameDelta);
     UpdateCollisions();
+    GameObject::Update(frameDelta);
 }
 
 void GameWorld::Draw()
@@ -24,8 +25,8 @@ void GameWorld::Draw()
 
 void GameWorld::SpawnAsteroid()
 {
-    auto dir =  glm::vec2{cinder::Rand::randFloat(0.0, 1.0), cinder::Rand::randFloat(0.0, 1.0)};
-    CreateGameObject<Asteroid>(glm::vec2{1.0, 1.0}, glm::normalize(dir), 20, 30);
+    auto direction = glm::sphericalRand(1.0);
+    CreateGameObject<Asteroid>(glm::vec2{1.0, 1.0}, glm::normalize(direction), 20, 30);
     RegisterCallback([this](){
         SpawnAsteroid();
     }, std::chrono::steady_clock::now() + std::chrono::seconds(10));
@@ -37,12 +38,13 @@ void GameWorld::AddCollider(Collidable* collidable)
 }
 
 void GameWorld::UpdateCollisions() {
-    mColliders.erase(std::remove_if(mColliders.begin(), mColliders.end(), [](const auto &collider){return not collider;}), mColliders.end());
-
-    std::for_each(mColliders.begin(), mColliders.end(), [this](auto &a){
-        std::for_each(mColliders.begin(), mColliders.end(), [this, a](auto &b){
-            if(a != b and a->Overlaps(b->GetPosition()))
+    //FIXME: collection of references without ownership?
+    for(auto a : mColliders)
+        for(auto b : mColliders)
+            if(a != b and a->Overlaps(*b))
                 a->Collide(*b);
-        });
-    });
+}
+
+void GameWorld::RemoveCollider(Collidable *collidable) {
+    mColliders.erase(std::remove_if(mColliders.begin(), mColliders.end(), [collidable](Collidable* collider){return collider == collidable;}), mColliders.end());
 }

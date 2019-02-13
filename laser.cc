@@ -5,7 +5,7 @@
 #include <cinder/gl/gl.h>
 #include "laser.h"
 
-Laser::Laser(GameObject& parent, glm::vec2 direction, glm::vec2 position) : Collidable(parent, position, 1), mDirection(direction){}
+Laser::Laser(GameObject& parent, glm::vec2 direction, glm::vec2 position) : Collidable(parent, Tag::Laser, position, 1), mDirection(direction){}
 
 void Laser::Update(const float frameDelta)
 {
@@ -19,5 +19,7 @@ void Laser::Draw()
 }
 
 void Laser::Collide(Collidable &other) {
+    if(other.GetTag() == Tag::Asteroid)
+        Destroy();
 
 }
