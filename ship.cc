@@ -12,14 +12,14 @@ Ship::Ship(GameWorld& root, const glm::vec2& center, const glm::vec2& heading, C
 }
 
 
-void Ship::Update(float frameDelta)
+void Ship::Update(FrameDelta frameDelta)
 {
     if(mController.held('w'))
-        Accelerate(frameDelta);
+        Accelerate(frameDelta.count());
     if(mController.held('a'))
-        Rotate(frameDelta*60.0f);
+        Rotate(frameDelta.count()*60.0f);
     if(mController.held('d'))
-        Rotate(-frameDelta*60.0f);
+        Rotate(-frameDelta.count()*60.0f);
     if(mController.held('e') and ReadyToFire())
         Fire();
     mPosition += mSpeed;
@@ -55,7 +55,7 @@ void Ship::Rotate(float degreesClockwise)
 void Ship::Fire()
 {
     auto laser = mRoot.CreateGameObject<Laser>(normalize(mHeading), mPosition);
-    mRoot.RegisterCallback([this, laser](){mRoot.DestroyGameObject(laser);}, 2s);
+    mRoot.RegisterCallback([this, laser](){laser->Destroy();}, 2s);
     mLastFireTime = std::chrono::steady_clock::now();
 }
 

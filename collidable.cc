@@ -1,6 +1,6 @@
-#include <cmath>
 #include "collidable.h"
 #include "game_world.h"
+#include <cmath>
 
 Collidable::Collidable(GameWorld& root, Tag tag, glm::vec2 position, float size) : GameObject(root, tag, position, size)
 {

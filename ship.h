@@ -1,15 +1,15 @@
 #pragma once
-#include <cinder/app/RendererGl.h>
-#include <cinder/gl/gl.h>
 #include "controller.h"
 #include "laser.h"
 #include "collidable.h"
+#include <cinder/app/RendererGl.h>
+#include <cinder/gl/gl.h>
 
 
 class Ship : public Collidable {
 public:
     Ship(GameWorld& root, const glm::vec2 &center, const glm::vec2& heading, Controller& controller);
-    void Update(float frameDelta) override;
+    void Update(FrameDelta frameDelta) override;
     void Draw() override;
     void Accelerate(float force);
     void Rotate(float degreesClockwise);

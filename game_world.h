@@ -1,14 +1,16 @@
 #pragma once
 
 #include "controller.h"
+#include "utils.h"
 
 class GameObject;
 class Collidable;
 
+
 class GameWorld {
 public:
     explicit GameWorld(Controller& controller);
-    void Update(float frameDelta);
+    void Update(FrameDelta frameDelta);
     void Draw();
 
     void AddCollider(Collidable* collidable);
@@ -24,16 +26,10 @@ public:
         return newObject;
     }
 
-    void DestroyGameObject(std::shared_ptr<GameObject> ptr)
-    {
-        mChildren.erase(std::remove_if(mChildren.begin(), mChildren.end(), [ptr](auto c){return c == ptr;}),mChildren.end());
-    }
-
     void RegisterCallback(std::function<void()> f, std::chrono::microseconds time)
     {
         mCallbacks.emplace_back(f, std::chrono::steady_clock::now() + time);
     }
-
 
 private:
     Controller& mController;

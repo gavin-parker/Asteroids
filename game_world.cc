@@ -14,7 +14,7 @@ GameWorld::GameWorld(Controller &controller) :
     }, 5s);
 }
 
-void GameWorld::Update(const float frameDelta)
+void GameWorld::Update(const FrameDelta frameDelta)
 {
     UpdateCollisions();
     mCallbacks.erase(std::remove_if(mCallbacks.begin(), mCallbacks.end(), [this](auto &callback){return Call(callback);}), mCallbacks.end());
@@ -53,12 +53,21 @@ void GameWorld::AddCollider(Collidable* collidable)
 
 void GameWorld::UpdateCollisions() {
     //FIXME: collection of references without ownership?
-    for(auto a : mColliders)
-        for(auto b : mColliders)
+    for(auto it = mColliders.begin(); it != mColliders.end(); it++)
+    {
+        auto& a = *it;
+        std::for_each(it, mColliders.end(), [&](auto& b){
             if(a != b and a->Overlaps(*b))
+            {
                 a->Collide(*b);
+                b->Collide(*a);
+            }
+        });
+    }
+
 }
 
 void GameWorld::RemoveCollider(Collidable *collidable) {
     mColliders.erase(std::remove_if(mColliders.begin(), mColliders.end(), [collidable](Collidable* collider){return collider == collidable;}), mColliders.end());
 }
+

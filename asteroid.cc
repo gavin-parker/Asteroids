@@ -1,8 +1,11 @@
-#include "asteroid.h"
-#include "utils.h"
 #include <cinder/gl/gl.h>
 #include <cinder/app/App.h>
 #include <glm/gtc/random.hpp>
+#include "asteroid.h"
+#include "utils.h"
+
+using namespace std::chrono_literals;
+
 
 Asteroid::Asteroid(GameWorld& parent, glm::vec2 direction, glm::vec2 position, float size, float speed) :
                 Collidable(parent, Tag::Asteroid, position, size),
@@ -10,9 +13,9 @@ Asteroid::Asteroid(GameWorld& parent, glm::vec2 direction, glm::vec2 position, f
                 mSpeed(speed) {
 }
 
-void Asteroid::Update(float frameDelta)
+void Asteroid::Update(FrameDelta frameDelta)
 {
-    auto dist = mDirection * mSpeed * frameDelta;
+    auto dist = mDirection * mSpeed * frameDelta.count();
     mPosition += dist;
     auto bounds = ci::app::getWindowBounds();
     if(!bounds.contains(mPosition))
