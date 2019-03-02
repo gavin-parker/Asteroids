@@ -2,7 +2,7 @@
 #include "collidable.h"
 #include "game_world.h"
 
-Collidable::Collidable(GameObject& parent, Tag tag, glm::vec2 position, float size) : GameObject(parent, tag, position, size)
+Collidable::Collidable(GameWorld& root, Tag tag, glm::vec2 position, float size) : GameObject(root, tag, position, size)
 {
     //FIXME: There has to be a better way
     dynamic_cast<GameWorld*>(&mRoot)->AddCollider(this);

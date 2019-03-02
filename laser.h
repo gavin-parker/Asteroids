@@ -5,7 +5,7 @@
 
 class Laser : public Collidable {
 public:
-    Laser(GameObject& parent, glm::vec2 direction, glm::vec2 position);
+    Laser(GameWorld& parent, glm::vec2 direction, glm::vec2 position);
     ~Laser() = default;
     void Update(float frameDelta) override;
     void Draw() override;

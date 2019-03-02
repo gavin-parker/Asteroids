@@ -3,7 +3,7 @@
 
 class Collidable : public GameObject {
 public:
-    Collidable(GameObject& parent, Tag tag, glm::vec2 position, float size);
+    Collidable(GameWorld& root, Tag tag, glm::vec2 position, float size);
 
     ~Collidable();
     bool Overlaps(Collidable& other);
@@ -12,6 +12,5 @@ public:
     glm::vec2& GetPosition() { return mPosition;}
 
     virtual void Collide(Collidable& other) = 0;
-
 
 };

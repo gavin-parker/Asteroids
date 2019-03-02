@@ -8,7 +8,7 @@
 
 class Ship : public Collidable {
 public:
-    Ship(GameObject& parent, const glm::vec2 &center, const glm::vec2& heading, Controller& controller);
+    Ship(GameWorld& root, const glm::vec2 &center, const glm::vec2& heading, Controller& controller);
     void Update(float frameDelta) override;
     void Draw() override;
     void Accelerate(float force);
