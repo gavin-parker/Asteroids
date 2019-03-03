@@ -12,7 +12,11 @@ public:
     void Accelerate(float force);
     void Rotate(float degreesClockwise);
     void Fire();
-    void Collide(Collidable& other) override;
+
+    void Collide(Asteroid &asteroid);
+
+    template<typename T>
+    void Collide(T&){}
 
 private:
     glm::vec2 mHeading;

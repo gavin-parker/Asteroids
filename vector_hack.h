@@ -13,6 +13,10 @@ public:
     template<class Func>
     void ForAll(Func f);
 
+    template<class Type, class Func>
+    void ForAllOf(Func f);
+
+
     template<class Func>
     void RemoveIf(Func f);
 
@@ -42,6 +46,8 @@ private:
 
     template<class Object, class Func>
     void _ForAll(Func f);
+    template<class Type, class Object, class Func>
+    void _ForAllOf(Func f);
     template<class Object, class Func>
     void _RemoveIf(Func f);
 };
@@ -49,6 +55,13 @@ private:
 template<class... Objs>
 template<class Func>
 void VectorHack<Objs...>::ForAll(Func f)
+{
+    (_ForAll<Objs>(f), ...);
+}
+
+template<class... Objs>
+template<class Type, class Func>
+void VectorHack<Objs...>::ForAllOf(Func f)
 {
     (_ForAll<Objs>(f), ...);
 }
@@ -62,6 +75,15 @@ void VectorHack<Objs...>::RemoveIf(Func f) {
 template<class... Objs>
 template<class Obj, class Func>
 void VectorHack<Objs...>::_ForAll(Func f) {
+    auto &contents = std::get<std::vector<Obj>>(mContents);
+    std::for_each(contents.begin(), contents.end(), f);
+}
+
+template<class... Objs>
+template<class Type, class Obj, class Func>
+void VectorHack<Objs...>::_ForAllOf(Func f) {
+    if(not std::is_base_of<Type, Obj>::value)
+        return;
     auto &contents = std::get<std::vector<Obj>>(mContents);
     std::for_each(contents.begin(), contents.end(), f);
 }

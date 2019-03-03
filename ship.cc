@@ -67,10 +67,9 @@ bool Ship::ReadyToFire()
     return std::chrono::steady_clock::now() - mLastFireTime > 200ms;
 }
 
-void Ship::Collide(Collidable &other)
+void Ship::Collide(Asteroid&)
 {
-//    if(other.GetTag() == Tag::Asteroid)
-//        Crash();
+    Crash();
 }
 
 void Ship::Crash()

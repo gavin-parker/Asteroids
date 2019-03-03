@@ -12,6 +12,4 @@ public:
     float GetSize(){return mSize;}
     glm::vec2& GetPosition() { return mPosition;}
 
-    virtual void Collide(Collidable& other) = 0;
-
 };

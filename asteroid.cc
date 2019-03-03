@@ -27,14 +27,11 @@ void Asteroid::Draw()
     ci::gl::drawStrokedCircle(mPosition, mSize);
 }
 
-void Asteroid::Collide(Collidable &other)
+void Asteroid::Collide(Laser&)
 {
-//    if(other.GetTag() == Tag::Laser)
-//    {
-//        Destroy();
-//        if(mSize > 5)
-//            Break();
-//    }
+    Destroy();
+    if(mSize > 5)
+        Break();
 }
 
 void Asteroid::Break()

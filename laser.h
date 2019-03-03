@@ -9,7 +9,10 @@ public:
     ~Laser() = default;
     void Update(FrameDelta frameDelta) override;
     void Draw() override;
-    void Collide(Collidable& other) override;
+
+    template<typename T>
+    void Collide(T &other){}
+
 private:
     glm::vec2 mDirection;
     float speed = 100;
