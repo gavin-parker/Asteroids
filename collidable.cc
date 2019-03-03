@@ -1,11 +1,10 @@
-#include "collidable.h"
 #include "game_world.h"
 #include <cmath>
 
-Collidable::Collidable(GameWorld& root, Tag tag, glm::vec2 position, float size) : GameObject(root, tag, position, size)
+Collidable::Collidable(GameWorld* root, uint64_t id, glm::vec2 position, float size) : GameObject(root, id, position, size)
 {
     //FIXME: There has to be a better way
-    dynamic_cast<GameWorld*>(&mRoot)->AddCollider(this);
+    mRoot->AddCollider(this);
 }
 //FIXME: just square hitboxes for now
 bool Collidable::Overlaps(Collidable& other)
@@ -17,5 +16,5 @@ bool Collidable::Overlaps(Collidable& other)
 
 Collidable::~Collidable()
 {
-        dynamic_cast<GameWorld*>(&mRoot)->RemoveCollider(this);
+        mRoot->RemoveCollider(this);
 }

@@ -1,12 +1,11 @@
-#include "ship.h"
+#include "game_world.h"
 #include "utils.h"
-#include "asteroid.h"
 #include <glm/gtc/random.hpp>
 #include <math.h>
 
 using namespace std::chrono_literals;
 
-Ship::Ship(GameWorld& root, const glm::vec2& center, const glm::vec2& heading, Controller& controller) : Collidable(root, Tag::Player, center, 10),
+Ship::Ship(GameWorld* root, glm::vec2& center, glm::vec2& heading, Controller* controller) : Collidable(root, root->GetId(), center, 10),
         mHeading(heading),
         mController(controller){
 }
@@ -14,13 +13,13 @@ Ship::Ship(GameWorld& root, const glm::vec2& center, const glm::vec2& heading, C
 
 void Ship::Update(FrameDelta frameDelta)
 {
-    if(mController.held('w'))
+    if(mController->held('w'))
         Accelerate(frameDelta.count());
-    if(mController.held('a'))
+    if(mController->held('a'))
         Rotate(frameDelta.count()*60.0f);
-    if(mController.held('d'))
+    if(mController->held('d'))
         Rotate(-frameDelta.count()*60.0f);
-    if(mController.held('e') and ReadyToFire())
+    if(mController->held('e') and ReadyToFire())
         Fire();
     mPosition += mSpeed;
     auto bounds = ci::app::getWindowBounds();
@@ -54,8 +53,12 @@ void Ship::Rotate(float degreesClockwise)
 
 void Ship::Fire()
 {
-    auto laser = mRoot.CreateGameObject<Laser>(normalize(mHeading), mPosition);
-    mRoot.RegisterCallback([this, laser](){laser->Destroy();}, 2s);
+    auto laserId = mRoot->CreateGameObject<Laser>(normalize(mHeading), mPosition);
+    mRoot->RegisterCallback([&, laserId]()
+    {
+        auto& laser = mRoot->GetObject<Laser>(laserId);
+        laser.Destroy();
+    }, 2s);
     mLastFireTime = std::chrono::steady_clock::now();
 }
 
@@ -66,8 +69,8 @@ bool Ship::ReadyToFire()
 
 void Ship::Collide(Collidable &other)
 {
-    if(other.GetTag() == Tag::Asteroid)
-        Crash();
+//    if(other.GetTag() == Tag::Asteroid)
+//        Crash();
 }
 
 void Ship::Crash()
@@ -75,8 +78,8 @@ void Ship::Crash()
     for(int i=0; i < 5; i ++)
     {
         auto direction = glm::sphericalRand(1.0);
-        auto laser = mRoot.CreateGameObject<Laser>(direction, mPosition);
+        mRoot->CreateGameObject<Laser>(direction, mPosition);
     }
     std::cout << "you crashed!" << std::endl;
-    mRoot.RegisterCallback([this](){Destroy();}, 20ms);
+    mRoot->RegisterCallback([this](){Destroy();}, 20ms);
 }

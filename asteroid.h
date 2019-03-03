@@ -5,7 +5,7 @@
 
 class Asteroid : public Collidable {
 public:
-    Asteroid(GameWorld& parent, glm::vec2 direction, glm::vec2 position, float size, float speed);
+    Asteroid(GameWorld* root, glm::vec2 direction, glm::vec2 position, float size, float speed);
 
     void Update(FrameDelta frameDelta) override;
     void Draw() override;

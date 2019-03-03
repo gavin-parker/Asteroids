@@ -8,18 +8,22 @@ using namespace std::chrono_literals;
 GameWorld::GameWorld(Controller &controller) :
         mController(controller)
 {
-    SpawnObject<Ship>(ci::app::getWindowCenter(), glm::vec2{0.0, 1.0}, mController);
+    SpawnObject<Ship>(ci::app::getWindowCenter(), glm::vec2{0.0, 1.0}, &mController);
     RegisterCallback([this](){
         SpawnAsteroid();
     }, 5s);
 }
 
-void GameWorld::Update(const FrameDelta frameDelta)
+void GameWorld::Update(FrameDelta frameDelta)
 {
-    UpdateCollisions();
     mCallbacks.erase(std::remove_if(mCallbacks.begin(), mCallbacks.end(), [this](auto &callback){return Call(callback);}), mCallbacks.end());
-    mChildren.erase(std::remove_if(mChildren.begin(), mChildren.end(), [](auto &child){return child->GetDestroyed();}), mChildren.end());
-    std::for_each(mChildren.begin(), mChildren.end(), [frameDelta](auto child){child->Update(frameDelta);});
+    mWorldContents.RemoveIf([](auto&& child){return child.GetDestroyed();});
+    mWorldContents.ForAll([frameDelta](auto&& child){child.Update(frameDelta);});
+}
+
+void GameWorld::Draw()
+{
+    mWorldContents.ForAll([](auto&& child){child.Draw();});
 }
 
 bool GameWorld::Call(Callback &callback)
@@ -31,10 +35,6 @@ bool GameWorld::Call(Callback &callback)
         return true;
     }
     return false;
-}
-
-void GameWorld::Draw() {
-    std::for_each(mChildren.begin(), mChildren.end(), [](auto child){child->Draw();});
 }
 
 void GameWorld::SpawnAsteroid()
@@ -70,4 +70,3 @@ void GameWorld::UpdateCollisions() {
 void GameWorld::RemoveCollider(Collidable *collidable) {
     mColliders.erase(std::remove_if(mColliders.begin(), mColliders.end(), [collidable](Collidable* collider){return collider == collidable;}), mColliders.end());
 }
-

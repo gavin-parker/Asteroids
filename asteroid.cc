@@ -1,14 +1,14 @@
 #include <cinder/gl/gl.h>
 #include <cinder/app/App.h>
 #include <glm/gtc/random.hpp>
-#include "asteroid.h"
+#include "game_world.h"
 #include "utils.h"
 
 using namespace std::chrono_literals;
 
 
-Asteroid::Asteroid(GameWorld& parent, glm::vec2 direction, glm::vec2 position, float size, float speed) :
-                Collidable(parent, Tag::Asteroid, position, size),
+Asteroid::Asteroid(GameWorld* root, glm::vec2 direction, glm::vec2 position, float size, float speed) :
+                Collidable(root, root->GetId(), position, size),
                 mDirection(direction),
                 mSpeed(speed) {
 }
@@ -29,12 +29,12 @@ void Asteroid::Draw()
 
 void Asteroid::Collide(Collidable &other)
 {
-    if(other.GetTag() == Tag::Laser)
-    {
-        Destroy();
-        if(mSize > 5)
-            Break();
-    }
+//    if(other.GetTag() == Tag::Laser)
+//    {
+//        Destroy();
+//        if(mSize > 5)
+//            Break();
+//    }
 }
 
 void Asteroid::Break()
@@ -42,6 +42,6 @@ void Asteroid::Break()
     for(int i = 0; i < 2; i++)
     {
         auto direction = glm::sphericalRand(1.0);
-        mRoot.CreateGameObject<Asteroid>(glm::normalize(direction), mPosition, mSize/2, mSpeed*2);
+        mRoot->CreateGameObject<Asteroid>(glm::normalize(direction), mPosition, mSize/2, mSpeed*2);
     }
 }

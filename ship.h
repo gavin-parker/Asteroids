@@ -1,14 +1,12 @@
 #pragma once
 #include "controller.h"
 #include "laser.h"
-#include "collidable.h"
 #include <cinder/app/RendererGl.h>
 #include <cinder/gl/gl.h>
 
-
 class Ship : public Collidable {
 public:
-    Ship(GameWorld& root, const glm::vec2 &center, const glm::vec2& heading, Controller& controller);
+    Ship(GameWorld* root, glm::vec2 &center, glm::vec2& heading, Controller* controller);
     void Update(FrameDelta frameDelta) override;
     void Draw() override;
     void Accelerate(float force);
@@ -18,9 +16,8 @@ public:
 
 private:
     glm::vec2 mHeading;
-    Controller& mController;
+    Controller* mController;
     glm::vec2 mSpeed{0,0};
-    std::vector<std::shared_ptr<Laser>> mLasers;
 
     std::chrono::steady_clock::time_point mLastFireTime = std::chrono::steady_clock::now();
     bool ReadyToFire();

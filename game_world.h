@@ -1,29 +1,24 @@
 #pragma once
-
 #include "controller.h"
 #include "utils.h"
-
-class GameObject;
-class Collidable;
-
+#include "vector_hack.h"
+#include "asteroid.h"
+#include "ship.h"
+#include "collidable.h"
 
 class GameWorld {
 public:
     explicit GameWorld(Controller& controller);
+
     void Update(FrameDelta frameDelta);
     void Draw();
-
     void AddCollider(Collidable* collidable);
     void RemoveCollider(Collidable* collidable);
 
     template<typename T, typename ...Args>
-    std::shared_ptr<T> CreateGameObject(Args&&... args)
+    uint64_t CreateGameObject(Args&&... args)
     {
-        auto newObject = std::make_shared<T>(*this, args...);
-        RegisterCallback([this, newObject](){
-            mChildren.push_back(newObject);
-            }, std::chrono::microseconds::zero());
-        return newObject;
+        return SpawnObject<T>(args...);
     }
 
     void RegisterCallback(std::function<void()> f, std::chrono::microseconds time)
@@ -31,23 +26,32 @@ public:
         mCallbacks.emplace_back(f, std::chrono::steady_clock::now() + time);
     }
 
+    uint64_t GetId()
+    {
+        return mIds++;
+    }
+
+    template<class Obj>
+    Obj& GetObject(uint64_t id)
+    {
+        return mWorldContents.Get<Obj>(id);
+    }
 private:
     Controller& mController;
     std::vector<Collidable*> mColliders;
     using Callback = std::tuple<std::function<void()>, std::chrono::steady_clock::time_point>;
 
-    std::vector<std::shared_ptr<GameObject>> mChildren;
+    VectorHack<Ship, Laser, Asteroid> mWorldContents;
     std::deque<Callback> mCallbacks;
+    uint64_t mIds = 0;
     void SpawnAsteroid();
     void UpdateCollisions();
     bool Call(Callback &callback);
 
     template<typename T, typename ...Args>
-    std::shared_ptr<T> SpawnObject(Args&&... args)
+    uint64_t SpawnObject(Args&&... args)
     {
-        auto newObject = std::make_shared<T>(*this, args...);
-        mChildren.push_back(newObject);
-        return newObject;
+        return mWorldContents.Create<T>(this, args...);
     }
 
 };

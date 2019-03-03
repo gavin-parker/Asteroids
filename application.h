@@ -1,5 +1,4 @@
 #pragma once
-#include "ship.h"
 #include "controller.h"
 #include "game_world.h"
 #include <cinder/app/App.h>

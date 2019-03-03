@@ -1,7 +1,7 @@
-#include "laser.h"
+#include "game_world.h"
 #include <cinder/gl/gl.h>
 
-Laser::Laser(GameWorld& root, glm::vec2 direction, glm::vec2 position) : Collidable(root, Tag::Laser, position, 1), mDirection(direction){}
+Laser::Laser(GameWorld* root, glm::vec2 direction, glm::vec2 position) : Collidable(root, root->GetId(), position, 1), mDirection(direction){}
 
 void Laser::Update(const FrameDelta frameDelta)
 {
@@ -15,7 +15,7 @@ void Laser::Draw()
 }
 
 void Laser::Collide(Collidable &other) {
-    if(other.GetTag() == Tag::Asteroid)
-        Destroy();
+//    if(other.GetTag() == Tag::Asteroid)
+//        Destroy();
 
 }
