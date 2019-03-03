@@ -13,7 +13,7 @@ class GameWorld;
 
 class GameObject {
 public:
-    GameObject(GameWorld* root, uint64_t id, glm::vec2 position, float size) : mRoot(root), mId(id), mPosition(position), mSize(size){};
+    GameObject(GameWorld* root, ObjectId id, glm::vec2 position, float size) : mRoot(root), mId(id), mPosition(position), mSize(size){};
     virtual void Update(FrameDelta frameDelta) = 0;
     virtual void Draw() = 0;
 
@@ -24,14 +24,14 @@ public:
         mDestroyed = true;
     }
 
-    uint64_t GetId()
+    ObjectId GetId()
     {
         return mId;
     }
 
 protected:
     GameWorld* mRoot;
-    uint64_t mId;
+    ObjectId mId;
     bool mDestroyed = false;
     glm::vec2 mPosition;
     float mSize;

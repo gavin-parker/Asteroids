@@ -47,11 +47,6 @@ void GameWorld::SpawnAsteroid()
     }, 10s);
 }
 
-void GameWorld::AddCollider(Collidable* collidable)
-{
-    mColliders.push_back(collidable);
-}
-
 void GameWorld::UpdateCollisions() {
     mWorldContents.ForAllOf<Collidable>([&](auto&& a){
         mWorldContents.ForAllOf<Collidable>([&](auto&& b){
@@ -60,8 +55,4 @@ void GameWorld::UpdateCollisions() {
         });
     });
 
-}
-
-void GameWorld::RemoveCollider(Collidable *collidable) {
-    mColliders.erase(std::remove_if(mColliders.begin(), mColliders.end(), [collidable](Collidable* collider){return collider == collidable;}), mColliders.end());
 }

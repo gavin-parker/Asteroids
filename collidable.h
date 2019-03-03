@@ -4,9 +4,8 @@
 
 class Collidable : public GameObject {
 public:
-    Collidable(GameWorld* root, uint64_t id, glm::vec2 position, float size);
+    Collidable(GameWorld* root, ObjectId id, glm::vec2 position, float size);
 
-    ~Collidable();
     bool Overlaps(Collidable& other);
 
     float GetSize(){return mSize;}

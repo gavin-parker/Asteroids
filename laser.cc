@@ -13,9 +13,3 @@ void Laser::Draw()
 {
     ci::gl::drawSolidCircle(mPosition, mSize);
 }
-
-//void Laser::Collide(Collidable &other) {
-////    if(other.GetTag() == Tag::Asteroid)
-////        Destroy();
-//
-//}

@@ -1,7 +1,7 @@
 #include "game_world.h"
 #include "utils.h"
 #include <glm/gtc/random.hpp>
-#include <math.h>
+#include <cmath>
 
 using namespace std::chrono_literals;
 

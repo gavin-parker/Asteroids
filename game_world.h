@@ -1,7 +1,7 @@
 #pragma once
 #include "controller.h"
 #include "utils.h"
-#include "vector_hack.h"
+#include "game_store.h"
 #include "asteroid.h"
 #include "ship.h"
 #include "collidable.h"
@@ -12,11 +12,9 @@ public:
 
     void Update(FrameDelta frameDelta);
     void Draw();
-    void AddCollider(Collidable* collidable);
-    void RemoveCollider(Collidable* collidable);
 
     template<typename T, typename ...Args>
-    uint64_t CreateGameObject(Args&&... args)
+    ObjectId CreateGameObject(Args&&... args)
     {
         return SpawnObject<T>(args...);
     }
@@ -26,30 +24,29 @@ public:
         mCallbacks.emplace_back(f, std::chrono::steady_clock::now() + time);
     }
 
-    uint64_t GetId()
+    ObjectId GetId()
     {
         return mIds++;
     }
 
     template<class Obj>
-    Obj& GetObject(uint64_t id)
+    Obj& GetObject(ObjectId id)
     {
         return mWorldContents.Get<Obj>(id);
     }
 private:
     Controller& mController;
-    std::vector<Collidable*> mColliders;
     using Callback = std::tuple<std::function<void()>, std::chrono::steady_clock::time_point>;
 
-    VectorHack<Ship, Laser, Asteroid> mWorldContents;
+    GameStore<Ship, Laser, Asteroid> mWorldContents;
     std::deque<Callback> mCallbacks;
-    uint64_t mIds = 0;
+    ObjectId mIds = 0;
     void SpawnAsteroid();
     void UpdateCollisions();
     bool Call(Callback &callback);
 
     template<typename T, typename ...Args>
-    uint64_t SpawnObject(Args&&... args)
+    ObjectId SpawnObject(Args&&... args)
     {
         return mWorldContents.Create<T>(this, args...);
     }

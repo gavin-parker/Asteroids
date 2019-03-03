@@ -10,7 +10,6 @@ public:
 
     void Update(FrameDelta frameDelta) override;
     void Draw() override;
-    void Break();
 
     void Collide(Laser &laser);
 
@@ -19,6 +18,7 @@ public:
 private:
     glm::vec2 mDirection;
     float mSpeed;
+    void Break();
 };
 
 
